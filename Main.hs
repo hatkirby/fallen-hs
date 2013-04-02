@@ -8,32 +8,31 @@ module Main where
   
   -- main :: ()
   main = do
-    rg <- getStdGen
-    let (m,rg') = initOverworld rg
+    m <- initOverworld
     initCurses
     keypad stdScr True
     echo False
     cursSet CursorInvisible
     startColor
-    mainLoop (75,75) m rg'
+    mainLoop (75,75) m
     endWin
   
-  mainLoop player m rg = do
+  mainLoop player m = do
     render player m
     input <- getCh
     case input of
-      KeyLeft -> moveIfPassable player m rg West
-      KeyRight -> moveIfPassable player m rg East
-      KeyUp -> moveIfPassable player m rg North
-      KeyDown -> moveIfPassable player m rg South
+      KeyLeft -> moveIfPassable player m West
+      KeyRight -> moveIfPassable player m East
+      KeyUp -> moveIfPassable player m North
+      KeyDown -> moveIfPassable player m South
       _ -> putStrLn "endgame"
   
-  moveIfPassable player m rg dir = do
+  moveIfPassable player m dir = do
     let p' = stepInDirection player dir
     let t' = getTileAtPos m p'
     if t' `elem` passableTiles
-      then mainLoop p' m rg
-      else mainLoop player m rg
+      then mainLoop p' m
+      else mainLoop player m
   
   -- render :: Point -> Map -> Window -> ()
   render (px,py) m = do

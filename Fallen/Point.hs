@@ -34,10 +34,10 @@ module Fallen.Point
     West -> East
   
   -- randomPoint :: Int -> Int -> Int -> Int -> IO Point
-  randomPoint minX minY maxX maxY rg = do
-    let (x,rg1) = randomR (minX, maxX) rg :: (Int,StdGen)
-    let (y,rg2) = randomR (minY, maxY) rg1  :: (Int,StdGen)
-    ((x,y),rg2)
+  randomPoint minX minY maxX maxY = do
+    x <- randomRIO (minX, maxX)
+    y <- randomRIO (minY, maxY)
+    return (x,y)
   
   -- dirToPoint :: Point -> Point -> [Direction]
   dirToPoint p1 p2 = horizDirToPoint p1 p2 ++ vertDirToPoint p1 p2 where
