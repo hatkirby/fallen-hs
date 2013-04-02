@@ -46,7 +46,7 @@ module Fallen.Map
   -- legalMoves :: Map -> Point -> [Tile] -> [Direction]
   legalMoves m p ts = map fst $ filter legal $ map tileDir directions where
     tileDir d = (d, getTileAtPos m $ stepInDirection p d)
-    legal (_,t) = t `elem` ts
+    legal (d,t) = (t `elem` ts) && (inBounds m $ stepInDirection p d)
    
   -- fillMapRect :: Int -> Int -> Int -> Int -> Tile -> Map -> Map
   fillMapRect x y w h t (Map d xs bg) = if bg == t
