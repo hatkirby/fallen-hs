@@ -28,15 +28,9 @@ module Fallen.Map
   inBounds m (x,y) = let (w,h) = dimension m in (x >= 0) && (x < w) && (y >= 0) && (y < h)
   
   -- getTileAtPos :: Map -> Point -> Tile
-  --getTileAtPos m p = if (inBounds m p)
-  --  then mapdata m p
-  --  else background m
   getTileAtPos m p = fromMaybe (background m) $ lookup p $ mapdata m
   
   -- findTileInMap :: Map -> Tile -> [Point]
---  findTileInMap m t = filter (\p -> t == mapdata m p) rawPoints where
---    (w,h) = dimension m
---    rawPoints = [(x,y) | x <- [0..w-1], y <- [0..h-1]]
   findTileInMap m t = map fst $ filter ((== t) . snd) $ mapdata m
   
   -- updateMap updates the tiles at the given position in the map
@@ -48,8 +42,6 @@ module Fallen.Map
     else case lookup p xs of
       Just _ -> Map d (map (\(p1,t1) -> if p1 == p then (p,t) else (p1,t1)) xs) bg
       Nothing -> Map d ((p,t):xs) bg
---  updateMap p t (Map d xs bg) = Map d (redirect p t xs) bg where
---    redirect p t xs = (\p2 -> if p == p2 then t else xs p2)
   
   -- legalMoves :: Map -> Point -> [Tile] -> [Direction]
   legalMoves m p ts = map fst $ filter legal $ map tileDir directions where
@@ -61,7 +53,3 @@ module Fallen.Map
 	  then Map d (filter outBounds xs) bg 
 	  else Map d (filter outBounds xs ++ [((px,py), t) | px <- [x..x+w-1], py <- [y..y+h-1]]) bg where
 		  outBounds ((px,py),_) = (px < x) || (px >= (x+w)) || (py < y) || (py >= (y+h))
---  fillMapRect x y w h t (Map d xs bg) = Map d redirectInBounds bg where
---    redirectInBounds = (\p -> if (inBounds p) then t else xs p)
---    inBounds (px,py) = (px >= x) && (px < (x+w)) && (py >= y) && (py < (y+h))
-  
